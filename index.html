@@ -75,7 +75,7 @@ nav.tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surfa
 .head-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .prog-head{display:grid;gap:14px;margin-bottom:16px}
 .prog-title{display:grid;gap:4px}
-.select{appearance:none;-webkit-appearance:none;height:54px;min-width:0;max-width:62%;flex:1 1 auto;background:var(--surface-2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF6B1A' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center/20px;border:1px solid var(--line);border-radius:12px;padding:0 40px 0 14px;font-weight:600;font-size:17px;text-overflow:ellipsis}
+.select{appearance:none;-webkit-appearance:none;height:54px;min-width:0;max-width:62%;flex:1 1 auto;background:var(--surface-2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239BA1A9' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center/20px;border:1px solid var(--line);border-radius:12px;padding:0 40px 0 14px;font-weight:600;font-size:17px;text-overflow:ellipsis}
 .banner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:14px;color:var(--muted)}
 
 /* Tables */
@@ -126,32 +126,34 @@ tr.new td{animation:pop 1.6s ease-out}
 
 /* Fiches exercice (Prog en cours) */
 .exlist{display:grid;gap:14px}
-.ex{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.ex{background:var(--surface);border:2px solid var(--accent);border-radius:var(--r);overflow:hidden;box-shadow:0 0 18px -8px var(--accent-glow)}
+.swatches{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.sw{display:flex;align-items:center;gap:10px;min-height:52px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-weight:600;font-size:15px;text-align:left}
+.sw i{width:22px;height:22px;flex:none;border-radius:50%;background:var(--c)}
+.sw[aria-pressed="true"]{border:2px solid var(--c);box-shadow:0 0 12px -4px var(--c)}
+@media (max-width:360px){.swatches{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .ex input{width:100%;min-width:0;height:48px;background:transparent;border:1px solid transparent;border-radius:9px;padding:0 10px;font-size:17px;font-variant-numeric:tabular-nums}
 .ex input::placeholder{color:var(--faint)}
 .ex input:focus{outline:none;border-color:var(--accent);background:var(--bg)}
 .ex-name{display:flex;align-items:center;gap:2px;padding:8px 6px 0}
 .ex .in-name{height:54px;font:700 22px/1 var(--f-display);text-transform:uppercase;letter-spacing:.02em}
-.ex-mus{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);margin-top:8px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.ex-mus .mus{display:flex;align-items:center;padding:6px;border-right:1px solid var(--line);min-width:0}
-.ex-mus .mus input{color:var(--muted);font-weight:500}
-.plan{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;padding:6px 0 4px 12px;min-width:0}
-.plan span{grid-column:1/-1;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.plan em{font-style:normal}
-.ex .plan input{height:40px;padding:0 4px;font-weight:700;font-size:20px}
-.ex-params{display:grid;grid-template-columns:0.95fr 0.95fr 1.4fr;border-bottom:1px solid var(--line)}
-.pf{display:flex;align-items:center;gap:0;padding:4px 4px 4px 10px;border-right:1px solid var(--line);min-width:0}
-.pf:last-child{border-right:0}
+.ex-mus{padding:4px 6px;margin-top:8px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ex-mus input{color:var(--muted);font-weight:500}
+.ex-params{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);border-bottom:1px solid var(--line)}
+.pf{display:flex;align-items:center;gap:0;padding:4px 4px 4px 12px;min-width:0;min-height:56px}
+.pf:nth-child(odd){border-right:1px solid var(--line)}
+.pf:nth-child(n+3){border-top:1px solid var(--line)}
 .pf span{font-size:15px;color:var(--muted);font-weight:600;white-space:nowrap}
 .ex .pf input{text-align:center;font-weight:700;font-size:19px;padding:0 2px}
-.pf em{font-style:normal;color:var(--muted);font-size:15px;font-weight:600;padding-right:4px}
+.pf em{font-style:normal;color:var(--muted);font-size:15px;font-weight:600;padding-right:8px}
+.pf.planned input{color:var(--text)}
 .more{width:100%;min-height:46px;background:var(--surface-2);border:0;border-bottom:1px solid var(--line);color:var(--muted);font-weight:600;font-size:15px}
 .srow{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) auto;align-items:center;border-top:1px solid var(--line)}
 .sessions .srow:first-child{border-top:0}
 .srow.last{background:var(--accent-soft)}
-.slabel{display:flex;align-items:center;gap:10px;padding:6px 10px;min-height:60px;border-right:1px solid var(--line);min-width:0}
+.slabel{display:flex;align-items:center;gap:8px;padding:6px 8px;min-height:60px;border-right:1px solid var(--line);min-width:0}
 .slabel span{display:grid;line-height:1.15;min-width:0}
-.slabel b{font:700 20px var(--f-display);text-transform:uppercase;letter-spacing:.02em}
+.slabel b{white-space:nowrap;font:700 20px var(--f-display);text-transform:uppercase;letter-spacing:.02em}
 .slabel small{color:var(--muted);font-size:14px;white-space:nowrap}
 .ex .sval{text-align:right;font-weight:700;font-size:20px}
 .ex .sval.filled{color:var(--accent)}
@@ -410,12 +412,12 @@ function viewProg(){
     const more=N>SHOW?'<button class="more" data-act="showAll" data-id="'+e.id+'">'+(all?'Masquer les séances précédentes':'Voir les '+start+' séance'+(start>1?'s':'')+' précédente'+(start>1?'s':''))+'</button>':'';
     return '<article class="ex" data-ex="'+e.id+'">'+
       '<div class="ex-name"><input class="in-name" data-f="name" value="'+esc(e.name)+'" placeholder="Nom de l\'exercice" aria-label="Nom de l\'exercice"><button class="grip" data-act="rowMenu" data-id="'+e.id+'" aria-label="Options pour '+nm+'">'+ICON.grip+'</button></div>'+
-      '<div class="ex-mus"><div class="mus"><input data-f="muscles" value="'+esc(e.muscles)+'" placeholder="Muscles travaillés" aria-label="Muscles travaillés – '+nm+'"></div>'+
-        '<label class="plan"><span>Charges prévues</span><input data-f="charge" value="'+esc(e.charge)+'" placeholder="–" aria-label="Charges prévues – '+nm+'"><em class="unit">kg</em></label></div>'+
+      '<div class="ex-mus"><input data-f="muscles" value="'+esc(e.muscles)+'" placeholder="Muscles travaillés" aria-label="Muscles travaillés – '+nm+'"></div>'+
       '<div class="ex-params">'+
         '<label class="pf"><span>Séries :</span><input data-f="series" value="'+esc(e.series)+'" inputmode="numeric" placeholder="–"></label>'+
         '<label class="pf"><span>Reps :</span><input data-f="reps" value="'+esc(e.reps)+'" placeholder="–"></label>'+
         '<label class="pf"><span>Récup :</span><input data-f="recup" value="'+esc(e.recup)+'" inputmode="decimal" placeholder="–"><em>min</em></label>'+
+        '<label class="pf planned"><span>Charges prévues :</span><input data-f="charge" value="'+esc(e.charge)+'" placeholder="–" aria-label="Charges prévues – '+nm+'"><em>kg</em></label>'+
       '</div>'+more+
       '<div class="sessions">'+(sess||'<p class="nos">Aucune séance. Touche + en haut pour en ajouter une.</p>')+'</div>'+
     '</article>';
@@ -614,10 +616,21 @@ function onChange(e){
 }
 
 /* ---------- Sauvegarde / réglages ---------- */
+const ACCENTS={orange:['Orange','#FF6B1A','#FF8A3D'],bleu:['Bleu','#2FB4FF','#66C8FF'],vert:['Vert','#33D17A','#66DE9B'],rouge:['Rouge','#F23B3B','#FF6666'],rose:['Rose','#FF4FA3','#FF7DBC'],jaune:['Jaune','#FFC928','#FFD866']};
+const AKEY='carnet-muscu-accent';
+function getAccent(){try{return localStorage.getItem(AKEY)||'orange'}catch(_){return 'orange'}}
+function applyAccent(k){
+  const a=ACCENTS[k]||ACCENTS.orange, st=document.documentElement.style;
+  const n=parseInt(a[1].slice(1),16), rgb=[n>>16&255,n>>8&255,n&255].join(',');
+  st.setProperty('--accent',a[1]);st.setProperty('--accent-hi',a[2]);
+  st.setProperty('--accent-soft','rgba('+rgb+',.13)');st.setProperty('--accent-glow','rgba('+rgb+',.55)');
+  try{localStorage.setItem(AKEY,k)}catch(_){}
+}
 function settings(){
   const json=JSON.stringify(S);
   sheet({title:'Sauvegarde',
-    html:'<p>Tes données restent sur ce téléphone, sans internet. Exporte-les de temps en temps pour ne rien perdre.</p>'+
+    html:'<label class="lbl">Couleur d\'accentuation</label><div class="swatches" role="group" aria-label="Couleur d\'accentuation">'+Object.keys(ACCENTS).map(k=>'<button type="button" class="sw" data-k="'+k+'" style="--c:'+ACCENTS[k][1]+'" aria-pressed="'+(getAccent()===k)+'"><i></i>'+ACCENTS[k][0]+'</button>').join('')+'</div><div class="sep"></div>'+
+      '<p>Tes données restent sur ce téléphone, sans internet. Exporte-les de temps en temps pour ne rien perdre.</p>'+
       '<label class="lbl" for="exp">Exporter</label><textarea class="field" id="exp" readonly>'+esc(json)+'</textarea>'+
       '<div class="stack" style="grid-template-columns:1fr 1fr"><button class="btn ghost" id="cpy">Copier</button><button class="btn ghost" id="dl">Télécharger</button></div>'+
       '<div class="sep"></div><label class="lbl" for="imp">Importer</label><textarea class="field" id="imp" placeholder="Colle ici une sauvegarde…"></textarea>'+
@@ -626,6 +639,7 @@ function settings(){
       '<div class="sep"></div><div class="stack"><button class="btn ghost block" id="rDemo">Recharger les données d\'exemple</button><button class="btn danger block" id="wipe">Tout effacer</button></div>',
     actions:[{label:'Fermer',cls:'primary'}],
     onMount:(sc,close)=>{
+      sc.querySelectorAll('.sw').forEach(b=>b.onclick=()=>{applyAccent(b.dataset.k);sc.querySelectorAll('.sw').forEach(x=>x.setAttribute('aria-pressed',String(x===b)))});
       $('#cpy',sc).onclick=async ev=>{const b=ev.currentTarget;try{await navigator.clipboard.writeText(json);b.textContent='Copié ✓'}catch(_){const ta=$('#exp',sc);ta.focus();ta.select();b.textContent='Texte sélectionné'}};
       let framed=true;try{framed=window.self!==window.top}catch(_){}
       if(framed){$('#dl',sc).hidden=true;$('#cpy',sc).parentNode.style.gridTemplateColumns='1fr'}
@@ -644,6 +658,7 @@ main.addEventListener('change',onChange);
 main.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('[data-act].card,tr[data-act]')){e.preventDefault();onClick(e)}});
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>go(t.dataset.tab)));
 $('#settingsBtn').addEventListener('click',settings);
+applyAccent(getAccent());
 persist();
 render();
 })();
