@@ -124,6 +124,41 @@ tr.draft-actions td{background:var(--accent-soft);padding:0 6px 10px}
 @keyframes pop{from{background:var(--accent-soft)}to{background:transparent}}
 tr.new td{animation:pop 1.6s ease-out}
 
+/* Fiches exercice (Prog en cours) */
+.exlist{display:grid;gap:14px}
+.ex{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.ex input{width:100%;min-width:0;height:48px;background:transparent;border:1px solid transparent;border-radius:9px;padding:0 10px;font-size:17px;font-variant-numeric:tabular-nums}
+.ex input::placeholder{color:var(--faint)}
+.ex input:focus{outline:none;border-color:var(--accent);background:var(--bg)}
+.ex-name{display:flex;align-items:center;gap:2px;padding:8px 6px 0}
+.ex .in-name{height:54px;font:700 22px/1 var(--f-display);text-transform:uppercase;letter-spacing:.02em}
+.ex-mus{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);margin-top:8px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ex-mus .mus{display:flex;align-items:center;padding:6px;border-right:1px solid var(--line);min-width:0}
+.ex-mus .mus input{color:var(--muted);font-weight:500}
+.plan{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;padding:6px 0 4px 12px;min-width:0}
+.plan span{grid-column:1/-1;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.plan em{font-style:normal}
+.ex .plan input{height:40px;padding:0 4px;font-weight:700;font-size:20px}
+.ex-params{display:grid;grid-template-columns:0.95fr 0.95fr 1.4fr;border-bottom:1px solid var(--line)}
+.pf{display:flex;align-items:center;gap:0;padding:4px 4px 4px 10px;border-right:1px solid var(--line);min-width:0}
+.pf:last-child{border-right:0}
+.pf span{font-size:15px;color:var(--muted);font-weight:600;white-space:nowrap}
+.ex .pf input{text-align:center;font-weight:700;font-size:19px;padding:0 2px}
+.pf em{font-style:normal;color:var(--muted);font-size:15px;font-weight:600;padding-right:4px}
+.more{width:100%;min-height:46px;background:var(--surface-2);border:0;border-bottom:1px solid var(--line);color:var(--muted);font-weight:600;font-size:15px}
+.srow{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) auto;align-items:center;border-top:1px solid var(--line)}
+.sessions .srow:first-child{border-top:0}
+.srow.last{background:var(--accent-soft)}
+.slabel{display:flex;align-items:center;gap:10px;padding:6px 10px;min-height:60px;border-right:1px solid var(--line);min-width:0}
+.slabel span{display:grid;line-height:1.15;min-width:0}
+.slabel b{font:700 20px var(--f-display);text-transform:uppercase;letter-spacing:.02em}
+.slabel small{color:var(--muted);font-size:14px;white-space:nowrap}
+.ex .sval{text-align:right;font-weight:700;font-size:20px}
+.ex .sval.filled{color:var(--accent)}
+.unit{padding:0 14px 0 2px;color:var(--muted);font-weight:600}
+.nos{margin:0;padding:16px 14px;color:var(--faint);font-size:15px}
+@media (max-width:370px){.pf{padding-left:8px}.pf span{font-size:14px}}
+
 /* Programmes */
 .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
 .seg{display:inline-flex;background:var(--surface-2);border-radius:12px;padding:4px;gap:2px}
@@ -325,8 +360,10 @@ function load(){
   try{const raw=localStorage.getItem(KEY); if(raw){const s=JSON.parse(raw); if(s&&Array.isArray(s.programs)) return s;}}catch(e){}
   return demo();
 }
+function toMin(v){const m=String(v||'').trim().match(/^(\d+)'(\d{1,2})?$/);if(!m)return v;const t=+m[1]+(m[2]?+m[2]/60:0);return fmtNum(Math.round(t*100)/100)}
 let S=load();
-const ui={tab:'prog',seg:'active',suivi:'week',rmDraft:null,scrollEnd:true,newRm:null};
+S.programs.forEach(p=>p.exercises.forEach(e=>{e.recup=toMin(e.recup)}));
+const ui={tab:'prog',seg:'active',suivi:'week',rmDraft:null,scrollEnd:true,newRm:null,showAll:new Set()};
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(S));return true}catch(e){return false}}
 let saveT,flashT;
 function touch(p){
@@ -353,27 +390,44 @@ function sheet({title,html='',actions=[],onMount}){
   return close;
 }
 
-/* ---------- Écran : Prog en cours ---------- */
+/* ---------- Écran : Prog en cours (fiches par exercice, séances en lignes) ---------- */
+const SHOW=3;
 function viewProg(){
   const p=cur();
   if(!p) return '<div class="empty"><h2>Aucun programme en cours</h2><p>Crée un programme ou réactive-en un depuis l\'onglet Programmes.</p><button class="btn primary" data-act="newProg">'+ICON.plus.replace('<svg','<svg width="20" height="20"')+'Nouveau programme</button></div>';
   const opts=S.programs.filter(x=>x.status==='active'||x.id===p.id).sort(byCreated);
-  const yy=s=>parse(s).getFullYear();
-  const head='<tr><th class="sticky w-name">Nom</th><th class="w-mus">Muscles</th><th class="w-s">Séries</th><th class="w-r">Reps</th><th class="w-c">Charges</th><th class="w-rec">Récup</th><th class="real w-real">Charges réelles</th>'+
-    p.cols.map(c=>'<th class="real w-real"><div class="dh"><span>'+fDM(c.date)+'<small>'+yy(c.date)+'</small></span><button class="minus" data-act="delCol" data-id="'+c.id+'" aria-label="Supprimer la séance du '+fDate(c.date)+'">'+ICON.minus+'</button></div></th>').join('')+'</tr>';
-  const cell=(e,f,ph,mode)=>'<td><input data-f="'+f+'" value="'+esc(e[f])+'" placeholder="'+ph+'"'+(mode?' inputmode="'+mode+'"':'')+' aria-label="'+ph+' – '+esc(e.name)+'"></td>';
-  const real=(e,k,lbl)=>{const v=e.actual[k]||'';return '<td class="real"><input class="'+(v?'filled':'')+'" data-c="'+k+'" value="'+esc(v)+'" placeholder="–" aria-label="'+lbl+' – '+esc(e.name)+'"></td>'};
-  const rows=p.exercises.map(e=>'<tr data-ex="'+e.id+'"><td class="sticky"><div class="namecell"><button class="grip" data-act="rowMenu" data-id="'+e.id+'" aria-label="Options pour '+esc(e.name||'cet exercice')+'">'+ICON.grip+'</button><input data-f="name" value="'+esc(e.name)+'" placeholder="Exercice" aria-label="Nom de l\'exercice"></div></td>'+
-    cell(e,'muscles','Muscles')+cell(e,'series','Séries','numeric')+cell(e,'reps','Reps')+cell(e,'charge','kg')+cell(e,'recup','Récup')+
-    real(e,'base','Charges réelles')+p.cols.map(c=>real(e,c.id,'Séance du '+fDate(c.date))).join('')+'</tr>').join('');
+  const N=p.cols.length;
+  const lastDate=N?p.cols[N-1].date:null;
+  const cards=p.exercises.map(e=>{
+    const all=ui.showAll.has(e.id);
+    const start=all?0:Math.max(0,N-SHOW);
+    const nm=esc(e.name||'cet exercice');
+    const sess=p.cols.slice(start).map((c,k)=>{
+      const n=start+k+1, v=e.actual[c.id]||'';
+      return '<div class="srow'+(start+k===N-1?' last':'')+'"><div class="slabel"><button class="minus" data-act="delCol" data-id="'+c.id+'" aria-label="Supprimer la séance '+n+' du '+fDate(c.date)+'">'+ICON.minus+'</button><span><b>Séance '+n+'</b><small>'+fLong(c.date)+'</small></span></div>'+
+        '<input class="sval'+(v?' filled':'')+'" data-c="'+c.id+'" value="'+esc(v)+'" placeholder="Charge" aria-label="Charge séance '+n+' – '+nm+'"><span class="unit">kg</span></div>';
+    }).join('');
+    const more=N>SHOW?'<button class="more" data-act="showAll" data-id="'+e.id+'">'+(all?'Masquer les séances précédentes':'Voir les '+start+' séance'+(start>1?'s':'')+' précédente'+(start>1?'s':''))+'</button>':'';
+    return '<article class="ex" data-ex="'+e.id+'">'+
+      '<div class="ex-name"><input class="in-name" data-f="name" value="'+esc(e.name)+'" placeholder="Nom de l\'exercice" aria-label="Nom de l\'exercice"><button class="grip" data-act="rowMenu" data-id="'+e.id+'" aria-label="Options pour '+nm+'">'+ICON.grip+'</button></div>'+
+      '<div class="ex-mus"><div class="mus"><input data-f="muscles" value="'+esc(e.muscles)+'" placeholder="Muscles travaillés" aria-label="Muscles travaillés – '+nm+'"></div>'+
+        '<label class="plan"><span>Charges prévues</span><input data-f="charge" value="'+esc(e.charge)+'" placeholder="–" aria-label="Charges prévues – '+nm+'"><em class="unit">kg</em></label></div>'+
+      '<div class="ex-params">'+
+        '<label class="pf"><span>Séries :</span><input data-f="series" value="'+esc(e.series)+'" inputmode="numeric" placeholder="–"></label>'+
+        '<label class="pf"><span>Reps :</span><input data-f="reps" value="'+esc(e.reps)+'" placeholder="–"></label>'+
+        '<label class="pf"><span>Récup :</span><input data-f="recup" value="'+esc(e.recup)+'" inputmode="decimal" placeholder="–"><em>min</em></label>'+
+      '</div>'+more+
+      '<div class="sessions">'+(sess||'<p class="nos">Aucune séance. Touche + en haut pour en ajouter une.</p>')+'</div>'+
+    '</article>';
+  }).join('');
   const done=p.status==='done';
   return '<section class="prog-head">'+
-    '<div class="head-row"><button class="plus" data-act="addCol" aria-label="Ajouter une séance (colonne datée)">'+ICON.plus+'</button>'+
+    '<div class="head-row"><button class="plus" data-act="addCol" aria-label="Ajouter une séance">'+ICON.plus+'</button>'+
     '<select class="select" id="progSel" aria-label="Choisir le programme">'+opts.map(o=>'<option value="'+o.id+'"'+(o.id===p.id?' selected':'')+'>'+esc(o.name)+(o.status==='done'?' (terminé)':'')+'</option>').join('')+'</select></div>'+
-    '<div class="prog-title"><span class="eyebrow">Programme en cours</span><h1 class="h1">'+esc(p.name)+'</h1><span class="meta">'+p.cols.length+' séance'+(p.cols.length>1?'s':'')+' · créé le '+fDate(p.createdAt)+'</span></div>'+
+    '<div class="prog-title"><span class="eyebrow">Programme en cours</span><h1 class="h1">'+esc(p.name)+'</h1><span class="meta">'+N+' séance'+(N>1?'s':'')+(lastDate?' · dernière le '+fLong(lastDate):'')+' · '+p.exercises.length+' exercice'+(p.exercises.length>1?'s':'')+'</span></div>'+
     '</section>'+
     (done?'<div class="banner"><span>Programme terminé le '+fDate(p.finishedAt)+'.</span><button class="btn ghost" data-act="reactivate" data-id="'+p.id+'">Réactiver</button></div>':'')+
-    '<div class="tbl-wrap" id="progTable"><table><thead>'+head+'</thead><tbody>'+rows+'</tbody></table></div>'+
+    '<div class="exlist">'+cards+'</div>'+
     '<p class="hint">Tout s\'enregistre automatiquement. Touche ⋮⋮ pour déplacer ou supprimer un exercice.</p>'+
     '<div class="below"><button class="btn ghost" data-act="addEx">'+ICON.plus.replace('<svg','<svg width="20" height="20"')+'Exercice</button>'+(done?'':'<button class="btn ghost" data-act="finish">Terminer le programme</button>')+'</div>';
 }
@@ -501,11 +555,11 @@ function onClick(e){
   const el=e.target.closest('[data-act]'); if(!el) return;
   const act=el.dataset.act, id=el.dataset.id, p=cur();
   if(act==='addCol'){
-    sheet({title:'Nouvelle séance',html:'<p>Une colonne datée s\'ajoute à droite du tableau pour saisir tes charges réelles.</p><label class="lbl" for="colDate">Date de la séance</label><input class="field" type="date" id="colDate" value="'+today()+'"><div class="err" id="colErr"></div>',
+    sheet({title:'Nouvelle séance',html:'<p>Une ligne datée s\'ajoute en bas de chaque exercice pour saisir la charge du jour.</p><label class="lbl" for="colDate">Date de la séance</label><input class="field" type="date" id="colDate" value="'+today()+'"><div class="err" id="colErr"></div>',
       actions:[{label:'Annuler',cls:'ghost'},{label:'Valider',cls:'primary',run:sc=>{const v=$('#colDate',sc).value;if(!v){$('#colErr',sc).textContent='Choisis une date.';return false}p.cols.push({id:uid(),date:v});touch(p);ui.scrollEnd=true;render()}}]});
   }else if(act==='delCol'){
     const c=p.cols.find(x=>x.id===id);
-    sheet({title:'Supprimer la séance du '+fDate(c.date)+' ?',html:'<p>Les charges saisies dans cette colonne seront effacées.</p>',
+    sheet({title:'Supprimer la séance du '+fDate(c.date)+' ?',html:'<p>Cette séance sera retirée de tous les exercices du programme, avec les charges saisies.</p>',
       actions:[{label:'Annuler',cls:'ghost'},{label:'Supprimer',cls:'danger',run:()=>{p.cols=p.cols.filter(x=>x.id!==id);p.exercises.forEach(x=>delete x.actual[id]);touch(p);render()}}]});
   }else if(act==='rowMenu'){
     const i=p.exercises.findIndex(x=>x.id===id), ex=p.exercises[i];
@@ -515,8 +569,8 @@ function onClick(e){
       onMount:(sc,close)=>{$('#mvUp',sc).onclick=()=>{close();move(-1)};$('#mvDown',sc).onclick=()=>{close();move(1)}}});
   }else if(act==='addEx'){
     p.exercises.push({id:uid(),name:'',muscles:'',series:'',reps:'',charge:'',recup:'',actual:{}});touch(p);render();
-    const rows=document.querySelectorAll('#progTable tbody tr');const last=rows[rows.length-1];
-    if(last){const t=$('#progTable');t.scrollLeft=0;last.querySelector('input[data-f=name]').focus();}
+    const cards=document.querySelectorAll('.ex');const last=cards[cards.length-1];
+    if(last){last.scrollIntoView({block:'center'});last.querySelector('.in-name').focus({preventScroll:true});}
   }else if(act==='finish'){
     sheet({title:'Terminer « '+p.name+' » ?',html:'<p>Le programme part dans les archives (onglet Programmes › Terminés). Tu pourras le réactiver.</p>',
       actions:[{label:'Annuler',cls:'ghost'},{label:'Terminer',cls:'primary',run:()=>{p.status='done';p.finishedAt=today();touch(p);const next=S.programs.filter(x=>x.status==='active').sort(byCreated)[0];S.currentId=next?next.id:null;ui.scrollEnd=true;render()}}]});
@@ -543,12 +597,13 @@ function onClick(e){
     const r=S.rm.find(x=>x.id===id);
     sheet({title:r.exercise+' · '+r.max+' kg',html:'<p>Record du '+fDate(r.date)+'.</p>',
       actions:[{label:'Annuler',cls:'ghost'},{label:'Supprimer la ligne',cls:'danger',run:()=>{S.rm=S.rm.filter(x=>x.id!==id);touch();render()}}]});
-  }else if(act==='suiviMode'){ui.suivi=el.dataset.v;render();}
+  }else if(act==='suiviMode'){ui.suivi=el.dataset.v;render();
+  }else if(act==='showAll'){ui.showAll.has(id)?ui.showAll.delete(id):ui.showAll.add(id);render();}
 }
 function onInput(e){
   const t=e.target;
   if(ui.rmDraft&&t.closest('tr.draft')){ui.rmDraft={date:$('#rmDate').value,exercise:$('#rmEx').value,max:$('#rmMax').value};return}
-  const tr=t.closest('tr[data-ex]'); if(!tr) return;
+  const tr=t.closest('[data-ex]'); if(!tr) return;
   const p=cur(); const ex=p&&p.exercises.find(x=>x.id===tr.dataset.ex); if(!ex) return;
   if(t.dataset.f) ex[t.dataset.f]=t.value;
   else if(t.dataset.c){ex.actual[t.dataset.c]=t.value;t.classList.toggle('filled',!!t.value)}
