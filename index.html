@@ -1,15 +1,4 @@
-<!doctype html>
-<html lang="fr" class="standalone">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Carnet Muscu">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<style>html.standalone{padding-top:env(safe-area-inset-top,0px);background:#0F1012}</style>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Carnet Muscu</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="theme-color" content="#0F1012">
@@ -36,10 +25,10 @@ button{cursor:pointer}
 :focus-visible{outline:2px solid var(--accent-hi);outline-offset:2px}
 .app{height:100%;display:grid;grid-template-rows:auto 1fr auto;max-width:960px;margin:0 auto;background:var(--bg)}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--line)}
-.brand{font:700 21px/1 var(--f-display);letter-spacing:.08em;text-transform:uppercase}
+.brand{font:700 21px/1 var(--f-display);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
 .brand b{color:var(--accent)}
-.top-right{display:flex;align-items:center;gap:10px}
-.saved{font-size:14px;color:var(--muted);opacity:0;transition:opacity .3s}
+.top-right{display:flex;align-items:center;gap:10px;position:relative}
+.saved{position:absolute;top:calc(100% + 8px);right:0;z-index:5;white-space:nowrap;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:4px 12px;opacity:0;pointer-events:none;transition:opacity .3s}
 .saved.show{opacity:1}
 .icon-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;color:var(--muted)}
 .icon-btn svg{width:22px;height:22px}
@@ -105,14 +94,17 @@ td.real input.filled:focus{background:var(--bg)}
 .below .btn{flex:1 1 180px}
 
 /* RM table */
-table.rm{width:100%}
-table.rm td{padding:0 12px;height:56px;font-size:17px}
+table.rm{width:100%;table-layout:fixed}
+table.rm td{overflow-wrap:anywhere}
+.rm-list{display:grid;gap:10px;margin-top:10px}
+.rm-grp{background:var(--surface);border:2px solid var(--accent);border-radius:var(--r);overflow:hidden;box-shadow:0 0 18px -8px var(--accent-glow)}
+table.rm td{padding:0 10px;height:56px;font-size:17px}
 table.rm tr.row{cursor:pointer}
 table.rm tr.row:active td{background:var(--surface-2)}
 table.rm tr.gstart td{border-top:1px solid var(--line)}
 table.rm tbody tr.gstart:first-child td{border-top:0}
-.rm .ex{font-weight:600}
-.rm .ex.rep{color:var(--faint);font-weight:500}
+table.rm td.rmx{font-weight:600}
+table.rm td.rmx.rep{color:var(--faint);font-weight:500}
 .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .kg{font:700 22px var(--f-display);letter-spacing:.02em}
 .kg.top{color:var(--accent)}
@@ -159,6 +151,21 @@ tr.new td{animation:pop 1.6s ease-out}
 .ex .sval.filled{color:var(--accent)}
 .unit{padding:0 14px 0 2px;color:var(--muted);font-weight:600}
 .nos{margin:0;padding:16px 14px;color:var(--faint);font-size:15px}
+.ex-item+.ex-item{border-top:2px solid var(--accent)}
+.ss-tag{display:flex;align-items:center;gap:8px;padding:6px 14px 0;font:700 13px/1 var(--f-body);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.ss-tag::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent-glow)}
+.ss-add{width:30px;height:30px;flex:none;align-self:flex-start;margin:2px 2px 0 0;border-radius:9px;border:0;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;padding:0;box-shadow:0 4px 12px -4px var(--accent-glow)}
+.ss-add svg{width:16px;height:16px}
+.chrono-btn{width:auto;min-width:44px;padding:0 11px;gap:6px;display:flex;align-items:center}
+.chrono-btn b{font:700 17px/1 var(--f-display);letter-spacing:.03em;font-variant-numeric:tabular-nums;color:var(--text)}
+.chrono-btn.on{border-color:var(--accent);color:var(--accent);box-shadow:0 0 12px -4px var(--accent-glow)}
+.chrono-btn.on b{color:var(--accent)}
+.chrono-face{display:grid;justify-items:center;gap:6px;padding:18px 0 8px}
+.chrono-time{font:700 76px/1 var(--f-display);letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--text)}
+.chrono-time small{font-size:40px;color:var(--muted)}
+.chrono-face.on .chrono-time{color:var(--accent);text-shadow:0 0 24px var(--accent-glow)}
+.chrono-state{font-size:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.chrono-acts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media (max-width:370px){.pf{padding-left:8px}.pf span{font-size:14px}}
 
 /* Programmes */
@@ -222,13 +229,14 @@ textarea.field{height:120px;padding:12px 14px;font:13px/1.4 ui-monospace,Menlo,C
 @media (max-width:380px){.stat b{font-size:30px}.h1{font-size:30px}}
 </style>
 
-</head>
-<body>
 <div class="app">
   <header class="topbar">
     <div class="brand">Carnet <b>Muscu</b></div>
     <div class="top-right">
       <span class="saved" id="saved" aria-live="polite">Enregistré</span>
+      <button class="icon-btn chrono-btn" id="chronoBtn" aria-label="Chronomètre">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9.5 2h5M12 2v3M19 6l1.5-1.5"/></svg><b id="chronoMini" hidden></b>
+      </button>
       <button class="icon-btn" id="settingsBtn" aria-label="Sauvegarde et réglages">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68 1.65 1.65 0 0 0 10 3.17V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
@@ -394,13 +402,16 @@ function sheet({title,html='',actions=[],onMount}){
 
 /* ---------- Écran : Prog en cours (fiches par exercice, séances en lignes) ---------- */
 const SHOW=3;
+/* Un superset = exercices consécutifs ; e.ss=true rattache l'exercice au précédent. */
+function groups(p){const out=[];p.exercises.forEach((e,i)=>{if(e.ss&&i>0&&out.length)out[out.length-1].push(e);else out.push([e])});return out}
+function setGroups(p,gs){p.exercises=[];gs.forEach(g=>g.forEach((e,k)=>{e.ss=k>0;p.exercises.push(e)}))}
 function viewProg(){
   const p=cur();
   if(!p) return '<div class="empty"><h2>Aucun programme en cours</h2><p>Crée un programme ou réactive-en un depuis l\'onglet Programmes.</p><button class="btn primary" data-act="newProg">'+ICON.plus.replace('<svg','<svg width="20" height="20"')+'Nouveau programme</button></div>';
   const opts=S.programs.filter(x=>x.status==='active'||x.id===p.id).sort(byCreated);
   const N=p.cols.length;
   const lastDate=N?p.cols[N-1].date:null;
-  const cards=p.exercises.map(e=>{
+  const item=(e,idx)=>{
     const all=ui.showAll.has(e.id);
     const start=all?0:Math.max(0,N-SHOW);
     const nm=esc(e.name||'cet exercice');
@@ -410,18 +421,19 @@ function viewProg(){
         '<input class="sval'+(v?' filled':'')+'" data-c="'+c.id+'" value="'+esc(v)+'" placeholder="Charge" aria-label="Charge séance '+n+' – '+nm+'"><span class="unit">kg</span></div>';
     }).join('');
     const more=N>SHOW?'<button class="more" data-act="showAll" data-id="'+e.id+'">'+(all?'Masquer les séances précédentes':'Voir les '+start+' séance'+(start>1?'s':'')+' précédente'+(start>1?'s':''))+'</button>':'';
-    return '<article class="ex" data-ex="'+e.id+'">'+
-      '<div class="ex-name"><input class="in-name" data-f="name" value="'+esc(e.name)+'" placeholder="Nom de l\'exercice" aria-label="Nom de l\'exercice"><button class="grip" data-act="rowMenu" data-id="'+e.id+'" aria-label="Options pour '+nm+'">'+ICON.grip+'</button></div>'+
+    return '<div class="ex-item" data-ex="'+e.id+'">'+(idx>0?'<div class="ss-tag">Superset · exercice '+(idx+1)+'</div>':'')+
+      '<div class="ex-name"><button class="ss-add" data-act="addSS" data-id="'+e.id+'" aria-label="Ajouter un exercice en superset sous '+nm+'">'+ICON.plus+'</button><input class="in-name" data-f="name" value="'+esc(e.name)+'" placeholder="Nom de l\'exercice" aria-label="Nom de l\'exercice"><button class="grip" data-act="rowMenu" data-id="'+e.id+'" aria-label="Options pour '+nm+'">'+ICON.grip+'</button></div>'+
       '<div class="ex-mus"><input data-f="muscles" value="'+esc(e.muscles)+'" placeholder="Muscles travaillés" aria-label="Muscles travaillés – '+nm+'"></div>'+
       '<div class="ex-params">'+
         '<label class="pf"><span>Séries :</span><input data-f="series" value="'+esc(e.series)+'" inputmode="numeric" placeholder="–"></label>'+
         '<label class="pf"><span>Reps :</span><input data-f="reps" value="'+esc(e.reps)+'" placeholder="–"></label>'+
         '<label class="pf"><span>Récup :</span><input data-f="recup" value="'+esc(e.recup)+'" inputmode="decimal" placeholder="–"><em>min</em></label>'+
-        '<label class="pf planned"><span>Charges prévues :</span><input data-f="charge" value="'+esc(e.charge)+'" placeholder="–" aria-label="Charges prévues – '+nm+'"><em>kg</em></label>'+
+        '<label class="pf planned"><span>Charges :</span><input data-f="charge" value="'+esc(e.charge)+'" placeholder="–" aria-label="Charges – '+nm+'"><em>kg</em></label>'+
       '</div>'+more+
       '<div class="sessions">'+(sess||'<p class="nos">Aucune séance. Touche + en haut pour en ajouter une.</p>')+'</div>'+
-    '</article>';
-  }).join('');
+    '</div>';
+  };
+  const cards=groups(p).map(g=>'<article class="ex">'+g.map(item).join('')+'</article>').join('');
   const done=p.status==='done';
   return '<section class="prog-head">'+
     '<div class="head-row"><button class="plus" data-act="addCol" aria-label="Ajouter une séance">'+ICON.plus+'</button>'+
@@ -430,7 +442,7 @@ function viewProg(){
     '</section>'+
     (done?'<div class="banner"><span>Programme terminé le '+fDate(p.finishedAt)+'.</span><button class="btn ghost" data-act="reactivate" data-id="'+p.id+'">Réactiver</button></div>':'')+
     '<div class="exlist">'+cards+'</div>'+
-    '<p class="hint">Tout s\'enregistre automatiquement. Touche ⋮⋮ pour déplacer ou supprimer un exercice.</p>'+
+    '<p class="hint">Tout s\'enregistre automatiquement. Touche ⋮⋮ pour déplacer ou supprimer un exercice, et le + d\'un exercice pour lui ajouter un superset.</p>'+
     '<div class="below"><button class="btn ghost" data-act="addEx">'+ICON.plus.replace('<svg','<svg width="20" height="20"')+'Exercice</button>'+(done?'':'<button class="btn ghost" data-act="finish">Terminer le programme</button>')+'</div>';
 }
 
@@ -445,21 +457,25 @@ function sortedRM(){return [...S.rm].sort((a,b)=>a.exercise.localeCompare(b.exer
 function viewRM(){
   const list=sortedRM();
   const num=s=>parseFloat(String(s).replace(',','.'));
-  let rows='';
+  const grp=[];
   list.forEach((r,i)=>{
     const prev=list[i-1], next=list[i+1];
     const first=!prev||prev.exercise.toLowerCase()!==r.exercise.toLowerCase();
     const sameNext=next&&next.exercise.toLowerCase()===r.exercise.toLowerCase();
     let delta='';
     if(sameNext){const dv=num(r.max)-num(next.max); if(!isNaN(dv)&&dv!==0) delta='<span class="delta">'+(dv>0?'+':'')+fmtNum(dv)+' kg</span>';}
-    rows+='<tr class="row'+(first?' gstart':'')+(ui.newRm===r.id?' new':'')+'" data-act="rmRow" data-id="'+r.id+'" tabindex="0"><td class="num" style="text-align:left">'+fDate(r.date)+'</td><td class="ex'+(first?'':' rep')+'">'+esc(r.exercise)+'</td><td class="num"><span class="kg'+(first?' top':'')+'">'+esc(r.max)+' kg</span>'+delta+'</td></tr>';
+    if(first) grp.push('');
+    grp[grp.length-1]+='<tr class="row'+(ui.newRm===r.id?' new':'')+'" data-act="rmRow" data-id="'+r.id+'" tabindex="0"><td class="num" style="text-align:left">'+fDate(r.date)+'</td><td class="rmx'+(first?'':' rep')+'">'+esc(r.exercise)+'</td><td class="num"><span class="kg'+(first?' top':'')+'">'+esc(r.max)+' kg</span>'+delta+'</td></tr>';
   });
   ui.newRm=null;
+  const COLS='<colgroup><col style="width:34%"><col><col style="width:31%"></colgroup>';
+  const rows=grp.map(g=>'<div class="rm-grp"><table class="rm">'+COLS+'<tbody>'+g+'</tbody></table></div>').join('');
   const draft=ui.rmDraft?'<tr class="draft"><td><input class="field" type="date" id="rmDate" value="'+esc(ui.rmDraft.date)+'" aria-label="Date"></td><td><input class="field" id="rmEx" list="exList" value="'+esc(ui.rmDraft.exercise)+'" placeholder="Exercice" aria-label="Exercice" autocomplete="off"></td><td><input class="field" id="rmMax" inputmode="decimal" value="'+esc(ui.rmDraft.max)+'" placeholder="kg" aria-label="Charge max en kg"></td></tr>'+
     '<tr class="draft-actions"><td colspan="3"><div class="err" id="rmErr"></div><div class="draft-btns"><button class="btn ghost" data-act="rmCancel">Annuler</button><button class="btn primary" data-act="rmSave">Valider</button></div></td></tr>':'';
   return '<section class="prog-head"><div class="head-row" style="justify-content:flex-start"><button class="plus" data-act="rmAdd" aria-label="Ajouter un record">'+ICON.plus+'</button><div class="prog-title"><span class="eyebrow">Répétition maximale</span><h1 class="h1">Rep Max</h1></div></div></section>'+
     '<datalist id="exList">'+exNames().map(n=>'<option value="'+esc(n)+'">').join('')+'</datalist>'+
-    '<div class="tbl-wrap"><table class="rm"><thead><tr><th style="width:30%">Date</th><th>Exercice</th><th class="num">Charge max</th></tr></thead><tbody>'+draft+(rows||(!draft?'<tr><td colspan="3" style="color:var(--muted);height:80px">Aucun record. Touche + pour ajouter ton premier RM.</td></tr>':''))+'</tbody></table></div>'+
+    '<div class="tbl-wrap rm-head"><table class="rm">'+COLS+'<thead><tr><th>Date</th><th>Exercice</th><th class="num">Charge max</th></tr></thead>'+(draft?'<tbody>'+draft+'</tbody>':'')+'</table></div>'+
+    '<div class="rm-list">'+(rows||(!draft?'<div class="tbl-wrap"><table class="rm"><tbody><tr><td colspan="3" style="color:var(--muted);height:80px">Aucun record. Touche + pour ajouter ton premier RM.</td></tr></tbody></table></div>':''))+'</div>'+
     '<p class="hint">Trié par exercice, le plus récent en haut. Touche une ligne pour la supprimer.</p>';
 }
 
@@ -564,11 +580,23 @@ function onClick(e){
     sheet({title:'Supprimer la séance du '+fDate(c.date)+' ?',html:'<p>Cette séance sera retirée de tous les exercices du programme, avec les charges saisies.</p>',
       actions:[{label:'Annuler',cls:'ghost'},{label:'Supprimer',cls:'danger',run:()=>{p.cols=p.cols.filter(x=>x.id!==id);p.exercises.forEach(x=>delete x.actual[id]);touch(p);render()}}]});
   }else if(act==='rowMenu'){
-    const i=p.exercises.findIndex(x=>x.id===id), ex=p.exercises[i];
-    const move=d=>{const j=i+d;if(j<0||j>=p.exercises.length)return;p.exercises.splice(j,0,p.exercises.splice(i,1)[0]);touch(p);render()};
-    sheet({title:ex.name||'Exercice sans nom',html:'<div class="stack"><button class="btn ghost block" id="mvUp"'+(i===0?' disabled':'')+'>Monter</button><button class="btn ghost block" id="mvDown"'+(i===p.exercises.length-1?' disabled':'')+'>Descendre</button></div>',
-      actions:[{label:'Annuler',cls:'ghost'},{label:'Supprimer l\'exercice',cls:'danger',run:()=>{p.exercises.splice(i,1);touch(p);render()}}],
-      onMount:(sc,close)=>{$('#mvUp',sc).onclick=()=>{close();move(-1)};$('#mvDown',sc).onclick=()=>{close();move(1)}}});
+    const gs=groups(p), gi=gs.findIndex(g=>g.some(x=>x.id===id)), g=gs[gi], k=g.findIndex(x=>x.id===id), ex=g[k];
+    const inSS=g.length>1;
+    const canUp=inSS?k>0||gi>0:gi>0, canDown=inSS?k<g.length-1||gi<gs.length-1:gi<gs.length-1;
+    const move=d=>{
+      if(inSS&&k+d>=0&&k+d<g.length){g.splice(k+d,0,g.splice(k,1)[0])}
+      else{const j=gi+d;if(j<0||j>=gs.length)return;gs.splice(j,0,gs.splice(gi,1)[0])}
+      setGroups(p,gs);touch(p);render()};
+    const unlink=()=>{g.splice(k,1);gs.splice(gi+1,0,[ex]);setGroups(p,gs.filter(x=>x.length));touch(p);render()};
+    sheet({title:ex.name||'Exercice sans nom',html:'<div class="stack"><button class="btn ghost block" id="mvUp"'+(canUp?'':' disabled')+'>Monter</button><button class="btn ghost block" id="mvDown"'+(canDown?'':' disabled')+'>Descendre</button>'+(inSS?'<button class="btn ghost block" id="unSS">Sortir du superset</button>':'')+'</div>',
+      actions:[{label:'Annuler',cls:'ghost'},{label:'Supprimer l\'exercice',cls:'danger',run:()=>{g.splice(k,1);setGroups(p,gs.filter(x=>x.length));touch(p);render()}}],
+      onMount:(sc,close)=>{$('#mvUp',sc).onclick=()=>{close();move(-1)};$('#mvDown',sc).onclick=()=>{close();move(1)};if(inSS)$('#unSS',sc).onclick=()=>{close();unlink()}}});
+  }else if(act==='addSS'){
+    const i=p.exercises.findIndex(x=>x.id===id);
+    const ne={id:uid(),name:'',muscles:'',series:'',reps:'',charge:'',recup:'',actual:{},ss:true};
+    p.exercises.splice(i+1,0,ne);touch(p);render();
+    const it=document.querySelector('[data-ex="'+ne.id+'"]');
+    if(it){it.scrollIntoView({block:'center'});it.querySelector('.in-name').focus({preventScroll:true});}
   }else if(act==='addEx'){
     p.exercises.push({id:uid(),name:'',muscles:'',series:'',reps:'',charge:'',recup:'',actual:{}});touch(p);render();
     const cards=document.querySelectorAll('.ex');const last=cards[cards.length-1];
@@ -651,6 +679,39 @@ function settings(){
     }});
 }
 
+/* ---------- Chronomètre (en mémoire : continue fenêtre fermée, remis à zéro à la fermeture de l'appli) ---------- */
+const CH={acc:0,t0:0,run:false,tick:null};
+const chElapsed=()=>CH.acc+(CH.run?Date.now()-CH.t0:0);
+function chFmt(ms){const t=Math.floor(ms/1000),h=Math.floor(t/3600),m=Math.floor(t%3600/60),sec=t%60;return (h?h+':'+pad(m):pad(m))+':'+pad(sec)}
+function chPaint(){
+  const ms=chElapsed(), mini=$('#chronoMini'), btn=$('#chronoBtn');
+  mini.hidden=!(CH.run||ms>0); mini.textContent=chFmt(ms);
+  btn.classList.toggle('on',CH.run);
+  btn.setAttribute('aria-label','Chronomètre'+(CH.run||ms>0?' – '+chFmt(ms)+(CH.run?' en cours':' arrêté'):''));
+  const face=$('#chFace');
+  if(face){
+    face.classList.toggle('on',CH.run);
+    $('#chTime').innerHTML=chFmt(ms)+'<small>,'+Math.floor(ms%1000/100)+'</small>';
+    $('#chState').textContent=CH.run?'En cours':ms>0?'Arrêté':'Prêt';
+    const tg=$('#chToggle');tg.textContent=CH.run?'Arrêter':(ms>0?'Reprendre':'Démarrer');tg.className='btn '+(CH.run?'danger':'primary');
+    $('#chReset').disabled=ms===0;
+  }
+}
+function chLoop(){clearInterval(CH.tick);CH.tick=null;if(CH.run||$('#chFace'))CH.tick=setInterval(()=>{chPaint();if(!CH.run&&!$('#chFace')){clearInterval(CH.tick);CH.tick=null}},100)}
+function chronoSheet(){
+  sheet({title:'Chronomètre',
+    html:'<div class="chrono-face" id="chFace"><div class="chrono-time" id="chTime" aria-live="off"></div><div class="chrono-state" id="chState"></div></div>'+
+      '<div class="chrono-acts"><button type="button" class="btn primary" id="chToggle"></button><button type="button" class="btn ghost" id="chReset">Réinitialiser</button></div>'+
+      '<p style="font-size:14px;text-align:center">Tu peux fermer cette fenêtre : le temps continue de tourner.</p>',
+    actions:[{label:'Fermer',cls:'ghost'}],
+    onMount:sc=>{
+      $('#chToggle',sc).onclick=()=>{if(CH.run){CH.acc+=Date.now()-CH.t0;CH.run=false}else{CH.t0=Date.now();CH.run=true}chPaint();chLoop()};
+      $('#chReset',sc).onclick=()=>{CH.acc=0;CH.t0=Date.now();CH.run=false;chPaint();chLoop()};
+      chPaint();chLoop();
+    }});
+}
+$('#chronoBtn').addEventListener('click',chronoSheet);
+
 const main=$('#main');
 main.addEventListener('click',onClick);
 main.addEventListener('input',onInput);
@@ -664,8 +725,4 @@ render();
 })();
 </script>
 
-<script>
-if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
-</script>
-</body>
-</html>
+</body></html>
