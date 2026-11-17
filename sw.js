@@ -1,5 +1,5 @@
-// Version 4 – supersets, chronomètre, cadres RM, libellé Charges
-const C='carnet-muscu-v4';
+// Version 5 – grand écran, partage fichier/QR/PDF, renommer
+const C='carnet-muscu-v5';
 const FILES=['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(FILES.map(f=>new Request(f,{cache:'reload'})))));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))));self.clients.claim()});
